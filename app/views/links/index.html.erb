@@ -1,0 +1,80 @@
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <div class="well text-center">
+  <a class="btn btn-primary" href="/links/new">New</a>
+  <a class="btn btn-primary" href="/links.json">json</a>
+  </div>
+  <hr />
+<div class="container-fluid">
+
+  <% @links.each do |link| %>
+
+
+<div id="modal_<%= link.id %>" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><%= link.url %></h4>
+      </div>
+      <div class="modal-body text-center">
+        <img src="http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=<%= CGI.escape(link.url) %>" /> 
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+    <div class="well row">
+      <div class="well text-center col-xs-12"><%= link.url %></div>
+      <hr />
+<form>
+  <div class="text-center col-xs-12 input-group">
+    <input type="text" class="form-control"
+        value="<%= root_url %>/f/<%= link.id %>" placeholder="short url" id="copy-input-<%= link.id %>">
+    <span class="input-group-btn">
+      <button class="btn btn-default" type="button" id="copy-button-<%= link.id %>"
+          data-placement="button"
+          >
+        Copy
+      </button>
+    </span>
+  </div>
+</form>
+<script>
+$('#copy-button-<%= link.id %>').bind('click', function() {
+  var input = document.querySelector('#copy-input-<%= link.id %>');
+  console.log(input);
+  input.setSelectionRange(0, input.value.length + 1);
+  try {
+    var success = document.execCommand('copy');
+    if (success) {
+	// Change tooltip message to "Copied!"
+    } else {
+      alert('copy failed');
+      // Handle error. Perhaps change tooltip message to tell user to use Ctrl-c
+      // instead.
+    }
+  } catch (err) {
+    // Handle error. Perhaps change tooltip message to tell user to use Ctrl-c
+    // instead.
+  }
+});
+
+
+</script>
+      <hr />
+
+      <div class="text-center col-xs-4"><a class="btn btn-default" href="/links/<%= link.id =%>.json">json</a></div>
+      <div class="text-center col-xs-4"><button class="btn btn-default" target="_q_<%= link.id %>" data-toggle="modal" data-target="#modal_<%= link.id %>">qr</button></div>
+      <div class="text-center col-xs-4 btn btn-default"><%= link_to 'remove', link_path(link),
+              method: :delete,
+              data: { confirm: 'Are you sure?' } %></td>
+		
+    </div>
+    </div>
+  <% end %>
+</div>
